@@ -1,5 +1,7 @@
 package no.hials.page.replacement;
 
+import java.util.List;
+
 /**
  * Common interface for Page Replacement algorithm
  * @author Girts Strazdins 
@@ -69,6 +71,21 @@ public abstract class ReplacementAlgorithm {
         }
         return false;
     }
+
+    protected boolean isFramesFull() {
+        boolean result = false;
+        int numberTaken = 0;
+        for(int i = 0; i < 3; i++) {
+            if(frames[i] != -1) {
+                numberTaken++;
+            }
+        }
+        if(numberTaken >= 3) {
+            result = true;
+        }
+        System.out.println("taken: " + numberTaken);
+        return result;
+    }
     
     /**
      * Load a virtual page into a physical RAM frame
@@ -93,6 +110,39 @@ public abstract class ReplacementAlgorithm {
         frames[frameNumber] = page;
 
         return replaced;
+    }
+
+    protected boolean pageInOptimal(int page, List<Integer> list, int pageProgress) {
+        boolean replaced = false;
+        int lengthToOne = 100;
+        int lengthToTwo = 100;
+        int lengthToThree = 100;
+            for(int i = pageProgress; i < list.size(); i++) {
+                if(frames[0] == list.get(i) && lengthToOne == 100) {
+                    lengthToOne = i;
+                }
+                if(frames[1] == list.get(i) && lengthToTwo == 100) {
+                    lengthToTwo = i;
+                }
+                if(frames[2] == list.get(i) && lengthToThree == 100) {
+                    lengthToThree = i;
+                }
+            }
+            if(lengthToOne > lengthToTwo && lengthToOne > lengthToThree) {
+                frames[0] = page;
+                replaced = true;
+                System.out.println("Replaced frame 0 with " + page);
+            } else if (lengthToTwo > lengthToOne && lengthToTwo > lengthToThree) {
+                frames[1] = page;
+                replaced = true;
+                System.out.println("Replaced frame 1 with " + page);
+            } else if (lengthToThree > lengthToOne && lengthToThree > lengthToTwo) {
+                frames[2] = page;
+                replaced = true;
+                System.out.println("Replaced frame 2 with " + page);
+            }
+
+            return replaced;
     }
     
    
